@@ -26,6 +26,32 @@ void Listar()
     }
 }
 
+// Busca tarefas cujo título contém a palavra-chave (sem diferenciar maiúsculas/minúsculas)
+void BuscarPorPalavraChave(string palavraChave)
+{
+    if (string.IsNullOrWhiteSpace(palavraChave))
+    {
+        Console.WriteLine("Informe uma palavra-chave para a busca.");
+        return;
+    }
+
+    var encontradas = tarefas
+        .Where(t => t.Titulo.Contains(palavraChave.Trim(), StringComparison.OrdinalIgnoreCase))
+        .ToList();
+
+    if (encontradas.Count == 0)
+    {
+        Console.WriteLine($"Nenhuma tarefa encontrada com \"{palavraChave}\".");
+        return;
+    }
+
+    foreach (var t in encontradas)
+    {
+        var status = t.Concluida ? "[X]" : "[ ]";
+        Console.WriteLine($"{status} #{t.Id} — {t.Titulo}");
+    }
+}
+
 Adicionar("Estudar para a avaliação do Módulo 11");
 Adicionar("Configurar o CLAUDE.md do projeto");
 Adicionar("Criar uma Skill reutilizável");
@@ -38,6 +64,18 @@ Concluir(1);
 Console.WriteLine();
 Console.WriteLine("=== Depois de concluir a tarefa #1 ===");
 Listar();
+
+Console.WriteLine();
+Console.WriteLine("=== Busca por \"claude\" ===");
+BuscarPorPalavraChave("claude");
+
+Console.WriteLine();
+Console.WriteLine("=== Busca por \"relatório\" ===");
+BuscarPorPalavraChave("relatório");
+
+Console.WriteLine();
+Console.WriteLine("=== Busca com palavra-chave vazia ===");
+BuscarPorPalavraChave("  ");
 
 Console.ReadLine();
 
